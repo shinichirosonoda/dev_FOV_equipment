@@ -170,7 +170,7 @@ def overlay(img, data):
     
     return img
 
-def normal_test(file_name = "test.png"):
+def normal_test(file_name = "test.png", params=processing_params):
     # file
     file = "./data/" + file_name
 
@@ -184,7 +184,7 @@ def normal_test(file_name = "test.png"):
     plt.show()
     
     # Overlay
-    img1, flag, x, y = Get_Angle_data(img1)
+    img1, flag, x, y = Get_Angle_data(img1, params=params)
     print("flag, x, y = ", flag, x, y)    
     plt.title("Overray")
     plt.imshow(img1)
@@ -226,5 +226,11 @@ def average_test(file_name = "test.png"):
     data_save_to_file(df)                              # save data to file
 
 if __name__ == '__main__':
-    #normal_test()
-    average_test()
+    processing_params = {"cal_func": (X_Pixel_To_Lx, Y_Pixel_To_Ly),\
+                         "Lz": 400,\
+                         "ignore": [900,1110,1410,1650],\
+                         "area" : (1010,1020,1525,1535),\
+                         "th": (0.2,0.8,0.2,0.8)}
+    
+    normal_test(params=processing_params)
+    #average_test()
