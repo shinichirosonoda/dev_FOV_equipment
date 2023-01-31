@@ -59,7 +59,7 @@ def Pixel_To_L(func, px):
     return func(px)
 
 # distance between 
-def L_To_Angle(L, Lz=400):
+def L_To_Angle(L, Lz):
     return np.rad2deg(np.arctan(L/ Lz))    
 
 # cal_func : calibration function length = func(px)
@@ -89,17 +89,17 @@ def Get_Angle(img, axis=0, params=processing_params):
         Lx_low, Lx_high = Pixel_To_L(cal_func[0], data["edge_x"][0]),\
                           Pixel_To_L(cal_func[0], data["edge_x"][1])
         
-        return (L_To_Angle(Lx_low, Lz=Lz),\
-               L_To_Angle(Lx_high, Lz=Lz),\
-               -L_To_Angle(Lx_low, Lz=Lz) + L_To_Angle(Lx_high, Lz=Lz)), flag
+        return (L_To_Angle(Lx_low, Lz),\
+               L_To_Angle(Lx_high, Lz),\
+               -L_To_Angle(Lx_low, Lz) + L_To_Angle(Lx_high, Lz)), flag
 
     elif axis == 1 and flag == True:
         Ly_low, Ly_high = Pixel_To_L(cal_func[1], data["edge_y"][0]),\
                           Pixel_To_L(cal_func[1], data["edge_y"][1])
         
-        return (L_To_Angle(Ly_low, Lz=Lz),\
-               L_To_Angle(Ly_high, Lz=Lz),\
-               -L_To_Angle(Ly_low, Lz=Lz) + L_To_Angle(Ly_high, Lz=Lz)), flag
+        return (L_To_Angle(Ly_low, Lz),\
+               L_To_Angle(Ly_high, Lz),\
+               -L_To_Angle(Ly_low, Lz) + L_To_Angle(Ly_high, Lz)), flag
 
     else:
         return (0.0, 0.0, 0.0), flag
