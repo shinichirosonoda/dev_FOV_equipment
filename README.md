@@ -1,1 +1,0 @@
-# dev_FOV_equipment

@@ -3,12 +3,9 @@
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-import time
+from datetime import datetime
+
 from fov_logging import data_save_init, data_save_add, data_save_to_file
-
-
-processing_params = {}
-
 
 # edge detection module
 def cal_edge(img, th, axis=0, min_value=15, print_flag=False):
@@ -65,13 +62,25 @@ def Pixel_To_L(func, px):
 def L_To_Angle(L, Lz=400):
     return np.rad2deg(np.arctan(L/ Lz))    
 
+# cal_func : calibration function length = func(px)
+# Lz: distance between the screen and the MEMS mirror
+# ignore: ignore area of ROI
+# area: ROI for calculation
+# th; threshold(xmin, xmax, ymin, ymax) 
+
+processing_params = {"cal_func": (X_Pixel_To_Lx, Y_Pixel_To_Ly),\
+                     "Lz": 400,\
+                     "ignore": [900,1110,1410,1650],\
+                     "area" : (1010,1020,1525,1535),\
+                     "th": (0.2,0.8,0.2,0.8)}
+
 # get angle
-def Get_Angle(img, axis=0,\
-                   cal_func = (X_Pixel_To_Lx, Y_Pixel_To_Ly),\
-                   Lz=400,\
-                   ignore=[900,1110,1410,1650],\
-                   area = (1010,1020,1525,1535),\
-                   th =(0.2,0.8,0.2,0.8)):
+def Get_Angle(img, axis=0, params=processing_params):
+    cal_func = params["cal_func"]
+    Lz = params["Lz"]
+    ignore = params["ignore"]
+    area = params["area"]
+    th = params["th"]
     
     img[ignore[0]:ignore[1], ignore[2]:ignore[3]] = 0
     data, flag = detect_edge(img, th=th, area=area)
@@ -96,10 +105,9 @@ def Get_Angle(img, axis=0,\
         return (0.0, 0.0, 0.0), flag
 
 # get angle data
-def Get_Angle_data(img):
-    data_x, flag0 = Get_Angle(img, axis=0)
-    data_y, flag1 = Get_Angle(img, axis=1)
-    #print(data_x, data_y)
+def Get_Angle_data(img, params=processing_params):
+    data_x, flag0 = Get_Angle(img, axis=0, params=params)
+    data_y, flag1 = Get_Angle(img, axis=1, params=params)
 
     
     str_x = "X_angle = {}, {}, {}".format(format(data_x[0], ".1f"),
@@ -193,9 +201,9 @@ def average_test(file_name = "test.png"):
     M = np.zeros((num_average, 6))                     # data strage Matrix
 
     df = data_save_init()                              # save data initialize
-    dt_now = time.time()
-
+    
     for i in range(10):
+        dt_now = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         M = np.roll(M, -1 ,axis=0)                     # data shift
         img = img_array[i]                             # image input
         x_data, flag0 = Get_Angle(img, axis=0)         # get x_data
@@ -218,5 +226,5 @@ def average_test(file_name = "test.png"):
     data_save_to_file(df)                              # save data to file
 
 if __name__ == '__main__':
-    normal_test()
-    #average_test()
+    #normal_test()
+    average_test()
