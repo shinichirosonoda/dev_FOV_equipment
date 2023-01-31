@@ -39,7 +39,7 @@ def cal_edge(img, th, axis=0, min_value=15, print_flag=False):
     return (edge0, edge1), flag
 
 # x,y edge detection
-def detect_edge(img, th =(0.2,0.8,0.2,0.8), area = (1010,1020,1525,1535)):
+def detect_edge(img, th, area):
     img_x = img[area[0]:area[1],:]
     img_y = img[:,area[2]:area[3]]
     
@@ -83,7 +83,7 @@ def Get_Angle(img, axis=0, params=processing_params):
     th = params["th"]
     
     img[ignore[0]:ignore[1], ignore[2]:ignore[3]] = 0
-    data, flag = detect_edge(img, th=th, area=area)
+    data, flag = detect_edge(img, th, area)
 
     if axis == 0 and flag == True:
         Lx_low, Lx_high = Pixel_To_L(cal_func[0], data["edge_x"][0]),\
