@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
 
-from fov_logging import data_save_init, data_save_add, data_save_to_file
+#from fov_logging import data_save_init, data_save_add, data_save_to_file
 
 # edge detection module
 def cal_edge(img, th, axis=0, min_value=15, print_flag=False):
@@ -57,10 +57,12 @@ def Y_Pixel_To_Ly(px):
 
 def Pixel_To_L(func, px):
     return func(px)
-
+   
 # distance between 
 def L_To_Angle(L, Lz):
     return np.rad2deg(np.arctan(L/ Lz))    
+
+# parameter setting
 
 # cal_func : calibration function length = func(px)
 # Lz: distance between the screen and the MEMS mirror
@@ -172,7 +174,7 @@ def overlay(img, data):
 
 def normal_test(file_name = "test.png", params=processing_params):
     # file
-    file = "./data/" + file_name
+    file = "./" + file_name
 
     img0 = cv2.cvtColor(cv2.imread(file, 1), cv2.COLOR_BGR2GRAY)
     img1 = cv2.imread(file, 1)[:,:,::-1]
@@ -191,8 +193,10 @@ def normal_test(file_name = "test.png", params=processing_params):
     plt.show()
 
 def average_test(file_name = "test.png"):
+    from fov_logging import data_save_init, data_save_add, data_save_to_file
+
     # file load
-    file = "./data/" + file_name
+    file = "./" + file_name
     img_array = []
     for i in range(10):
         img_array.append(cv2.imread(file, 1)[:,:,::-1])
@@ -216,7 +220,7 @@ def average_test(file_name = "test.png"):
         else:
             V_out = np.zeros(6)                        # data is zero
 
-        df = data_save_add(df, i, dt_now, V_out)       # save data add
+        df = data_save_add(df, dt_now, V_out)          # save data add
         img = overlay(img, V_out)                      # image overlay
 
         plt.title("Average Test")
@@ -233,4 +237,4 @@ if __name__ == '__main__':
                          "th": (0.2,0.8,0.2,0.8)}
     
     normal_test(params=processing_params)
-    #average_test()
+    average_test()
