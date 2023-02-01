@@ -169,7 +169,7 @@ def normal_test(file_name = "test.png", params=processing_params, draw_params=dr
     plt.imshow(img1)
     plt.show()
 
-def average_test(file_name = "test.png", draw_params=draw_params):
+def average_test(file_name = "test.png", params=processing_params, draw_params=draw_params):
     from fov_logging import data_save_init, data_save_add, data_save_to_file
 
     # file load
@@ -187,8 +187,8 @@ def average_test(file_name = "test.png", draw_params=draw_params):
         dt_now = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         M = np.roll(M, -1 ,axis=0)                                # data shift
         img = img_array[i]                                        # image input
-        x_data, flag0 = Get_Angle(img, axis=0)                    # get x_data
-        y_data, flag1 = Get_Angle(img, axis=1)                    # get y_data
+        x_data, flag0 = Get_Angle(img, axis=0, params=params)                    # get x_data
+        y_data, flag1 = Get_Angle(img, axis=1, params=params)                    # get y_data
         
         if flag0 * flag1 == True:
             V_in = np.concatenate([x_data, y_data], 0)            # get data
@@ -226,4 +226,4 @@ if __name__ == '__main__':
     draw_params = {"org_x":(50, 50), "org_y":(50, 100), "fontScale":1.5, "tickness":3}
 
     normal_test(file_name = "test1.png", params=processing_params, draw_params=draw_params)
-    #average_test()
+    average_test(file_name = "test1.png", params=processing_params, draw_params=draw_params)
