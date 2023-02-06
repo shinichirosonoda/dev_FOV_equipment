@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
 
-#from fov_logging import data_save_init, data_save_add, data_save_to_file
-
 # edge detection module
 def cal_edge(img, th, axis=0, min_value=15, print_flag=False):
     if axis == 0:
@@ -170,7 +168,7 @@ def normal_test(file_name = "test.png", params=processing_params, draw_params=dr
     plt.show()
 
 def average_test(file_name = "test.png", params=processing_params, draw_params=draw_params):
-    from fov_logging import data_save_init, data_save_add, data_save_to_file
+    from fov_logging import FovLogging
 
     # file load
     file = "./" + file_name
@@ -181,7 +179,7 @@ def average_test(file_name = "test.png", params=processing_params, draw_params=d
     num_average = 5                                               # num_average
     M = np.zeros((num_average, 6))                                # data strage Matrix
 
-    df = data_save_init()                                         # save data initialize
+    df = FovLogging.data_save_init()                                         # save data initialize
     
     for i in range(10):
         dt_now = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
@@ -197,14 +195,14 @@ def average_test(file_name = "test.png", params=processing_params, draw_params=d
         else:
             V_out = np.zeros(6)                                   # data is zero
 
-        df = data_save_add(df, dt_now, V_out)                     # save data add
+        df = FovLogging.data_save_add(df, dt_now, V_out)          # save data add
         img = overlay(img, V_out, draw_params=draw_params)        # image overlay
 
         plt.title("Average Test")
         plt.imshow(img)
         plt.show()
 
-    data_save_to_file(df)                                         # save data to file
+    FovLogging.data_save_to_file(df)                              # save data to file
 
 if __name__ == '__main__':
 
